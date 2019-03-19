@@ -1,5 +1,6 @@
 package com.zipcodewilmington.arrayutility;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -28,7 +29,7 @@ public class ArrayUtility<T> {
         T common = arrayToMerge[0];
         int commonCount = getNumberOfOccurrences(common);
 
-        for (T currentObject : (T[])mergeArray(arrayToMerge)) {
+        for (T currentObject : mergeArray(arrayToMerge)) {
             int currentCount = getNumberOfOccurrences(currentObject);
             if (currentCount > commonCount) {
                 common = currentObject;
@@ -38,13 +39,19 @@ public class ArrayUtility<T> {
         return common;
     }
 
-    private Object[] mergeArray(T[] arrayToMerge) {
-//        return Stream.of(array, arrayToMerge)
-//                .flatMap(Stream::of)
+//    private Object[] mergeArray(T[] arrayToMerge) {
+////        return Stream.of(array, arrayToMerge)
+////                .flatMap(Stream::of)
+////                .toArray();
+//        return Stream.concat(Arrays.stream(array),
+//                Arrays.stream(arrayToMerge))
 //                .toArray();
+//    }
+
+    private T[] mergeArray(T[] arrayToMerge) {
         return Stream.concat(Arrays.stream(array),
                 Arrays.stream(arrayToMerge))
-                .toArray();
+                .toArray(size -> (T[]) Array.newInstance(array.getClass().getComponentType(), size));
     }
 
     public Integer getNumberOfOccurrences(T valueToEvaluate) {
